@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <RootNamespace>ADO.NET_disconnected_3___SteamSpringSale</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="designPlaceHolders\header.jpg" />
+    <None Remove="designPlaceHolders\library_600x900_2x.jpg" />
+    <None Remove="designPlaceHolders\library_hero.jpg" />
+    <None Remove="designPlaceHolders\logo.png" />
+    <None Remove="designPlaceHolders\steamTitle.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="designPlaceHolders\header.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="designPlaceHolders\library_600x900_2x.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="designPlaceHolders\library_hero.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="designPlaceHolders\logo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="designPlaceHolders\steamTitle.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SteamLibraryClassLibrary\SteamLibraryClassLibrary.csproj" />
+  </ItemGroup>
+
+</Project>

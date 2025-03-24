@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35818.85 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADO.NET-disconnected-3---SteamSpringSale", "ADO.NET-disconnected-3---SteamSpringSale\ADO.NET-disconnected-3---SteamSpringSale.csproj", "{8C4D8303-432A-4012-A5E1-0C85B951A4F4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SteamLibraryClassLibrary", "SteamLibraryClassLibrary\SteamLibraryClassLibrary.csproj", "{3E052508-C0FE-4114-B462-63A0B6D7293B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8C4D8303-432A-4012-A5E1-0C85B951A4F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C4D8303-432A-4012-A5E1-0C85B951A4F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C4D8303-432A-4012-A5E1-0C85B951A4F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C4D8303-432A-4012-A5E1-0C85B951A4F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E052508-C0FE-4114-B462-63A0B6D7293B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E052508-C0FE-4114-B462-63A0B6D7293B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E052508-C0FE-4114-B462-63A0B6D7293B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E052508-C0FE-4114-B462-63A0B6D7293B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {654ED89D-05B8-45B9-B608-8055C53C512F}
+	EndGlobalSection
+EndGlobal
