@@ -19,6 +19,10 @@ namespace ADO.NET_disconnected_3___SteamSpringSale;
 /// </summary>
 public partial class MainWindow : Window
 {
+    private bool _isPlaying;
+    private DateTime _lastClickTime;
+    private List<string> _videoUrls;
+
     public MainWindow()
     {
         InitializeComponent();
@@ -34,25 +38,56 @@ public partial class MainWindow : Window
         }
     }
 
-    private void SteamGamesDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private async void SteamGamesDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         DataRowView? rowView = (SteamGamesDataGrid.SelectedItem as DataRowView);
         if (rowView != null)
         {
             DataRow row = rowView.Row;
-            string steamAppId = row["steam_appid"].ToString();
-            GameNameTextBlock.Text = row["name"].ToString();
-            PositiveReviewTextBlock.Text = row["total_positive"].ToString();
-            NegativeReviewTextBlock.Text = row["total_negative"].ToString();
+            string steamAppId = row["steam_appid"].ToString() ?? "620";
+            gameNameTextBlock.Text = row["name"].ToString();
+            positiveReviewTextBlock.Text = row["total_positive"].ToString();
+            negativeReviewTextBlock.Text = row["total_negative"].ToString();
 
-            Library600x900Image.Source = new BitmapImage(new Uri($"https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/{steamAppId}/library_600x900_2x.jpg", UriKind.Absolute));
-            LibraryHeroImage.Source = new BitmapImage(new Uri($"https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/{steamAppId}/library_hero.jpg", UriKind.Absolute));
-            LogoImage.Source = new BitmapImage(new Uri($"https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/{steamAppId}/logo.png", UriKind.Absolute));
+            library600x900Image.Source = new BitmapImage(new Uri(GameDetailsData.Library600x900(steamAppId), UriKind.Absolute));
+            libraryHeroImage.Source = new BitmapImage(new Uri(GameDetailsData.LibraryHero(steamAppId), UriKind.Absolute));
+            logoImage.Source = new BitmapImage(new Uri(GameDetailsData.Logo(steamAppId), UriKind.Absolute));
 
-            GenresListBox.Items.Clear();
+            _videoUrls = await GameDetailsData.VideoURLsAsync(steamAppId);
+
+            if (_videoUrls.Count > 0)
+            {
+                videoPlayer.Source = new Uri(_videoUrls[0], UriKind.Absolute);
+            }
+
+            GenresListBox.Items.Clear();    
             CategoriesListBox.Items.Clear();
-
+    
             // TODO vul genres + categories in
+        }
+    }
+
+    private void Video_Click(object sender, MouseButtonEventArgs e)
+    {
+        TimeSpan clickGap = DateTime.Now - _lastClickTime;
+        _lastClickTime = DateTime.Now;
+        if (!_isPlaying)
+        {
+            _isPlaying = true;
+            if (clickGap.TotalMilliseconds < 400)
+            {
+                videoPlayer.Position = System.TimeSpan.Zero;
+                videoPlayer.Play();
+            }
+            else
+            {
+                videoPlayer.Play();
+            }
+        }
+        else
+        {
+            _isPlaying = false;
+            videoPlayer.Pause();
         }
     }
 

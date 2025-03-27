@@ -128,7 +128,7 @@ namespace SteamLibraryClassLibrary
                     gameRow["price_initial"] = priceInitial;
                     gamesTable.Rows.Add(gameRow);
 
-                    // Voeg categorieën toe (studenten misschien aanmoedigen om hiervoor een functie te schrijven)
+                    // Voeg categorieën toe (studenten best aanmoedigen om hiervoor een functie te schrijven als dit lukt)
                     string[] categories = columns[4].Replace("['", "").Replace("']", "").Split("', '");
                     foreach (var category in categories)
                     {
@@ -146,7 +146,7 @@ namespace SteamLibraryClassLibrary
                         gameCategoriesTable.Rows.Add(gameCategoryRow);
                     }
 
-                    // Voeg de genres toe (studenten misschien aanmoedigen om hiervoor een functie te schrijven)
+                    // Voeg de genres toe (studenten aanmoedigen om hiervoor een functie te schrijven)
                     string[] genres = columns[5].Replace("['", "").Replace("']", "").Split(new[] { "', '" }, StringSplitOptions.None);
                     foreach (var genre in genres)
                     {
