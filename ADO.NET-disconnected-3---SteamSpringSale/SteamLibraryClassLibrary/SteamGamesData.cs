@@ -35,13 +35,6 @@ namespace SteamLibraryClassLibrary
             _steamDataSet.Tables.Add(_gameGenresTable);
         }
 
-        public static void ImportFromCsv(string fileName)
-        {
-            string csvFilePath = fileName;
-            // Lees het CSV-bestand en vul de DataTables
-            ReadCsvAndPopulateDataTables(csvFilePath);
-        }
-
         private static DataTable CreateGamesDataTable()
         {
             DataTable table = new DataTable("Games");
@@ -89,7 +82,7 @@ namespace SteamLibraryClassLibrary
             return table;
         }
 
-        private static void ReadCsvAndPopulateDataTables(string csvFilePath)
+        public static void ReadCsvAndPopulateDataTables(string csvFilePath)
         {
             using (StreamReader sr = new StreamReader(csvFilePath))
             {
@@ -201,20 +194,6 @@ namespace SteamLibraryClassLibrary
             return value;
         }
 
-        public static DataTable SearchGamesTable(string searchTerm, DataTable dataTableToFilter)
-        {
-            DataTable filteredGamesTable = dataTableToFilter.Clone();
-            foreach (DataRow row in dataTableToFilter.Rows)
-            {
-                string gameName = row["name"].ToString();
-                if (gameName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                {
-                    filteredGamesTable.ImportRow(row);
-                }
-            }
-            return filteredGamesTable;
-        }
-
         public static List<string> GetAllGenres()
         {
             List<string> genres = new List<string>();
@@ -248,7 +227,21 @@ namespace SteamLibraryClassLibrary
                 Select(x => x["category_name"].ToString()).ToList(); ;
         }
 
-        public static DataTable GetAllProfitableGames()
+        public static DataTable SearchGamesTable(string searchTerm, DataTable dataTableToFilter)
+        {
+            DataTable filteredGamesTable = dataTableToFilter.Clone();
+            foreach (DataRow row in dataTableToFilter.Rows)
+            {
+                string gameName = row["name"].ToString();
+                if (gameName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                {
+                    filteredGamesTable.ImportRow(row);
+                }
+            }
+            return filteredGamesTable;
+        }
+
+        public static DataTable GetAllGameProfits()
         {
             DataTable profitableGames = _gamesTable.Copy();
             profitableGames.Columns.Add("profit", typeof(double));
@@ -285,6 +278,11 @@ namespace SteamLibraryClassLibrary
             popularGames.Columns.Remove("is_free");
             popularGames.Columns.Remove("price_initial");
             return popularGames;
+        }
+
+        public static void ExportXML(string fileName)
+        {
+            _steamDataSet.WriteXml(fileName);
         }
 
         public static DataTable FilterGenre(string genre, DataTable dataTableToFilter)

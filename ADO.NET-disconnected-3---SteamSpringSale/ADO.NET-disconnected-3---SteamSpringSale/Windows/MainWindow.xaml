@@ -17,6 +17,7 @@
             <MenuItem Header="Popular Games" Name="popularGamesMenuItem" Click="PopularGamesMenuItem_Click"></MenuItem>
             <MenuItem Header="Profitable Games" Name="profitableGamesMenuItem" Click="ProfitableGamesMenuItem_Click"></MenuItem>
             <MenuItem Header="All Genres" Name="allGenresMenuItem" Click="AllGenresMenuItem_Click"></MenuItem>
+            <MenuItem Header="Export XML" Name="exportXMLMenuItem" Click="exportXMLMenuItem_Click"></MenuItem>
         </Menu>
         <Grid>
             <Grid.ColumnDefinitions>

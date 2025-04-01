@@ -42,7 +42,7 @@ public partial class MainWindow : Window
             OpenFileDialog ofd = new OpenFileDialog();
             if (ofd.ShowDialog() == true)
             {
-                SteamGamesData.ImportFromCsv(ofd.FileName);
+                SteamGamesData.ReadCsvAndPopulateDataTables(ofd.FileName);
             }
         });
         if (SteamGamesData.SteamDataSet != null)
@@ -63,6 +63,12 @@ public partial class MainWindow : Window
         }
     }
 
+    private void AllGenresMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        AllGenresWindow allGenresWindow = new AllGenresWindow(SteamGamesData.GetAllGenres());
+        allGenresWindow.Show();
+    }
+
     private void PopularGamesMenuItem_Click(object sender, RoutedEventArgs e)
     {
         PopularGamesWindow popularGamesWindow = new PopularGamesWindow(SteamGamesData.GetAllPopularGames());
@@ -71,7 +77,7 @@ public partial class MainWindow : Window
 
     private void ProfitableGamesMenuItem_Click(object sender, RoutedEventArgs e)
     {
-        ProfitableGamesWindow profitableGamesWindow = new ProfitableGamesWindow(SteamGamesData.GetAllProfitableGames());
+        ProfitableGamesWindow profitableGamesWindow = new ProfitableGamesWindow(SteamGamesData.GetAllGameProfits());
         profitableGamesWindow.Show();
     }
 
@@ -86,7 +92,7 @@ public partial class MainWindow : Window
             positiveReviewTextBlock.Text = row["total_positive"].ToString();
             negativeReviewTextBlock.Text = row["total_negative"].ToString();
 
-            library600x900Image.MaxWidth = library600x900Image.ActualWidth;
+            library600x900Image.MaxWidth = library600x900Image.ActualWidth == 0 ? 490 : library600x900Image.ActualWidth;
             library600x900Image.Source = new BitmapImage(new Uri(GameDetailsData.Library600x900(steamAppId), UriKind.Absolute));
             libraryHeroImage.Source = new BitmapImage(new Uri(GameDetailsData.LibraryHero(steamAppId), UriKind.Absolute));
             logoImage.Source = new BitmapImage(new Uri(GameDetailsData.Logo(steamAppId), UriKind.Absolute));
@@ -107,21 +113,7 @@ public partial class MainWindow : Window
         }
     }
 
-    private void UpdateSlider()
-    {
-        if (_videoUrls.Count > 0)
-        {
-            videoPlayer.Source = new Uri(_videoUrls[0], UriKind.Absolute);
-            CustomSlider.Maximum = _videoUrls.Count - 1;
-            CustomSlider.Value = 0;
-            Track track = CustomSlider.Template.FindName("PART_Track", CustomSlider) as Track;
-            if (track != null)
-            {
-                track.Thumb.Width = CustomSlider.ActualWidth / _videoUrls.Count;
-            }
-        }
-    }
-
+    #region Search
     private void SearchGrid()
     {
         DataTable filteredDataTable = SteamGamesData.SearchGamesTable(SearchTextBox.Text, SteamGamesData.SteamGamesDataTable);
@@ -143,7 +135,31 @@ public partial class MainWindow : Window
         }
         steamGamesDataGrid.ItemsSource = filteredDataTable.DefaultView;
     }
+    private void GenreComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        SearchGrid();
+    }
 
+    private void CategoryComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        SearchGrid();
+    }
+
+    private void SearchButton_Click(object sender, RoutedEventArgs e)
+    {
+        SearchGrid();
+    }
+
+    private void SearchTextBox_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter)
+        {
+            SearchGrid();
+        }
+    }
+    #endregion
+
+    #region VideoHandler
     private void Video_Click(object sender, MouseButtonEventArgs e)
     {
         TimeSpan clickGap = DateTime.Now - _lastClickTime;
@@ -165,37 +181,9 @@ public partial class MainWindow : Window
             videoPlayer.Pause();
         }
     }
+    #endregion
 
-    private void SearchButton_Click(object sender, RoutedEventArgs e)
-    {
-        SearchGrid();
-    }
-
-    private void SearchTextBox_KeyDown(object sender, KeyEventArgs e)
-    {
-        if (e.Key == Key.Enter)
-        {
-            SearchGrid();
-        }
-    }
-    private void Container_MouseMove(object sender, MouseEventArgs e)
-    {
-        Point position = e.GetPosition(Container);
-        if (position.Y >= Container.ActualHeight - 50 && !_isSliderVisible)
-        {
-            ShowSlider(SliderPanel);
-        }
-        else if (position.Y <= Container.ActualHeight - 60 && _isSliderVisible)
-        {
-            HideSlider(SliderPanel);
-        }
-    }
-
-    private void Container_MouseLeave(object sender, MouseEventArgs e)
-    {
-        HideSlider(SliderPanel);
-    }
-
+    #region CustomSlider
     private void ShowSlider(FrameworkElement element)
     {
         _isSliderVisible = true;
@@ -217,6 +205,21 @@ public partial class MainWindow : Window
         element.RenderTransform.BeginAnimation(ScaleTransform.ScaleYProperty, translateAnim);
     }
 
+    private void UpdateSlider()
+    {
+        if (_videoUrls.Count > 0)
+        {
+            videoPlayer.Source = new Uri(_videoUrls[0], UriKind.Absolute);
+            CustomSlider.Maximum = _videoUrls.Count - 1;
+            CustomSlider.Value = 0;
+            Track? track = CustomSlider.Template.FindName("PART_Track", CustomSlider) as Track;
+            if (track != null)
+            {
+                track.Thumb.Width = CustomSlider.ActualWidth / _videoUrls.Count;
+            }
+        }
+    }
+
     private void CustomSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
         if (_videoUrls != null && _videoUrls.Count != 0 && videoPlayer != null)
@@ -228,24 +231,36 @@ public partial class MainWindow : Window
         }
     }
 
-    private void AllGenresMenuItem_Click(object sender, RoutedEventArgs e)
+    private void Container_MouseMove(object sender, MouseEventArgs e)
     {
-        AllGenresWindow allGenresWindow = new AllGenresWindow(SteamGamesData.GetAllGenres());
-        allGenresWindow.Show();
+        Point position = e.GetPosition(Container);
+        if (position.Y >= Container.ActualHeight - 50 && !_isSliderVisible)
+        {
+            ShowSlider(SliderPanel);
+        }
+        else if (position.Y <= Container.ActualHeight - 60 && _isSliderVisible)
+        {
+            HideSlider(SliderPanel);
+        }
     }
 
-    private void GenreComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void Container_MouseLeave(object sender, MouseEventArgs e)
     {
-        SearchGrid();
+        HideSlider(SliderPanel);
     }
-
-    private void CategoryComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        SearchGrid();
-    }
+    #endregion
 
     private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
     {
         library600x900Image.MaxWidth = 490;
+    }
+
+    private void exportXMLMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        SaveFileDialog sfd = new SaveFileDialog();
+        if (sfd.ShowDialog() == true)
+        {
+            SteamGamesData.ExportXML(sfd.FileName);
+        }
     }
 }
